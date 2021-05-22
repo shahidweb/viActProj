@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.container{
+    max-width: 1320px;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.row{
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.col-sm-12 {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+.mt-2 { margin-top: 1rem;}
+.mt-1 { margin-top: 2rem;}
+a, a:hover{text-decoration: none; color: inherit;}
+a:hover{color: #49628C; text-decoration: underline;}
+img{max-width: 100%; height: auto;}
+.text-center{text-align: center;}
