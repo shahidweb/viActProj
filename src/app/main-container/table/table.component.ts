@@ -64,7 +64,7 @@ export class TableComponent implements AfterViewInit {
       });
     }
     applyFilter(event: Event) {
-      this.filterValue = (event.target as HTMLInputElement).value;
+      this.filterValue = (event.target as HTMLInputElement).value || 'apple';
       this.ngAfterViewInit()
     }
 }
