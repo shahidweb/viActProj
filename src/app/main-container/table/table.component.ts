@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { merge, of as observableOf } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { fromEvent, merge, of as observableOf } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { GithubIssue } from 'src/app/models/data-format';
 import { HttpDatabaseService } from 'src/app/services/http-database.service';
 import { displayedColumns } from '../../collection/variables';
-import {MatTableDataSource} from '@angular/material/table';
+
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -26,8 +27,9 @@ export class TableComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  searchTextChanged = new Subject<string>();
 
-  constructor(private _httpClient: HttpClient) {}
+  constructor(private _httpClient: HttpClient) {this.getSubject()}
 
   ngAfterViewInit() {
     this.exampleDatabase = new HttpDatabaseService(this._httpClient);
@@ -63,8 +65,17 @@ export class TableComponent implements AfterViewInit {
         this.data = data;
       });
     }
-    applyFilter(event: Event) {
+    applyFilter(event:Event) {
       this.filterValue = (event.target as HTMLInputElement).value || 'apple';
-      this.ngAfterViewInit()
+      this.searchTextChanged.next(this.filterValue);
+    }
+    getSubject(){
+      this.searchTextChanged.pipe(
+        map(x=> this.filterValue),
+        debounceTime(1000),
+        distinctUntilChanged(),
+      ).subscribe(f=>{
+        this.ngAfterViewInit()
+      })
     }
 }
